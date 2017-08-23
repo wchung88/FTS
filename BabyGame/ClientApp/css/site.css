@@ -65,7 +65,8 @@
     }
 }
 
-.container .title {
-    width: 50%;
+.card {
+    width: 40rem;
+    height: 40rem;
     float: left;
 }

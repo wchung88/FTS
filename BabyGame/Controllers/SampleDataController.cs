@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BabyGame.Controllers
@@ -27,10 +26,10 @@ namespace BabyGame.Controllers
         }
 
         [HttpGet("[action]")]
-        public IEnumerable<Tile> Tiles()
+        public IEnumerable<Card> Cards()
         {
             var rng = new Random();
-            return Enumerable.Range(1, 4).Select(index => new Tile
+            return Enumerable.Range(1, 40).Select(index => new Card
             {
                 Title = Summaries[rng.Next(Summaries.Length)]
             });
@@ -51,7 +50,7 @@ namespace BabyGame.Controllers
             }
         }
 
-        public class Tile
+        public class Card
         {
             public string Title { get; set; }
         }
