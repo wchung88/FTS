@@ -13,17 +13,14 @@ type FindCardProps =
 class FindCard extends React.Component<FindCardProps, {}> {
     componentWillMount() {
         // This method runs when the component is first added to the page
-        console.log('calling 1');
         this.props.requestCards();
     }
 
-    componentWillReceiveProps() {
-        // This method runs when incoming props (e.g., route params) change
-        // this.props.requestTiles();
-        console.log('calling');
-    }
-
     public render() {
+        if (!this.props.spoken) {
+            window.speechSynthesis.speak(new SpeechSynthesisUtterance("Hello World"));
+        }
+
         return <div>
             <h1>Find Card</h1>
             <p>This is a simple example of a React component.</p>
@@ -35,7 +32,7 @@ class FindCard extends React.Component<FindCardProps, {}> {
         return <div className='container'>
             <div className='card-columns'>
                 {this.props.cards.map(card =>
-                    <Card title={card.title} />
+                    <Card imageUrl={card.imageUrl} title={card.title} />
                 )}
             </div>
         </div>;

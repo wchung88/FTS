@@ -6,11 +6,13 @@ import { AppThunkAction } from './';
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface FindCardsState {
+    spoken: boolean;
     cards: Card[];
 }
 
 export interface Card {
     title: string;
+    imageUrl: string;
 }
 
 // -----------------
@@ -19,12 +21,12 @@ export interface Card {
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
 interface ReceiveCardsAction { type: 'RECEIVE_CARDS', cards: Card[] }
-interface IncrementCountAction { type: 'INCREMENT_COUNT' }
+interface RequestCardsAction { type: 'REQUEST_CARDS' }
 
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = IncrementCountAction | ReceiveCardsAction;
+type KnownAction = RequestCardsAction | ReceiveCardsAction;
 
 
 // ----------------
@@ -32,7 +34,7 @@ type KnownAction = IncrementCountAction | ReceiveCardsAction;
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const actionCreators = {
-    requestCards: (): AppThunkAction<ReceiveCardsAction> => (dispatch, getState) => {
+    requestCards: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
         // Only load data if it's something we don't already have (and are not already loading)
         let fetchTask = fetch(`api/SampleData/Cards`)
             .then(response => response.json() as Promise<Card[]>)
@@ -41,6 +43,7 @@ export const actionCreators = {
             });
 
         addTask(fetchTask); // Ensure server-side prerendering waits for this to complete
+        dispatch({ type: 'REQUEST_CARDS' });
     }
 };
 
@@ -51,10 +54,14 @@ export const reducer: Reducer<FindCardsState> = (state: FindCardsState, action: 
     switch (action.type) {
         case 'RECEIVE_CARDS':
             return {
-                cards: action.cards
+                cards: action.cards,
+                spoken: true
             };
-        case 'INCREMENT_COUNT':
-            return { cards: state.cards };
+        case 'REQUEST_CARDS':
+            return {
+                cards: state.cards,
+                spoken: false
+            };
         default:
             // The following line guarantees that every action in the KnownAction union has been covered by a case above
             const exhaustiveCheck: never = action;
@@ -62,5 +69,5 @@ export const reducer: Reducer<FindCardsState> = (state: FindCardsState, action: 
 
     // For unrecognized actions (or in cases where actions have no effect), must return the existing state
     //  (or default initial state if none was supplied)
-    return state || { cards: [] };
+    return state || { cards: [], spoken: false };
 };

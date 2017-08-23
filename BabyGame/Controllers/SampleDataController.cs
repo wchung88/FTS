@@ -13,6 +13,12 @@ namespace BabyGame.Controllers
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
+        private static Card[] cards = new[]
+        {
+            new Card{ Title = "Ball", ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/e/ec/Soccer_ball.svg"},
+            new Card{ Title = "Car", ImageUrl = "http://trottingmaregarage.co.uk/wp-content/uploads/2017/08/Car.png"}
+        };
+
         [HttpGet("[action]")]
         public IEnumerable<WeatherForecast> WeatherForecasts(int startDateIndex)
         {
@@ -28,11 +34,7 @@ namespace BabyGame.Controllers
         [HttpGet("[action]")]
         public IEnumerable<Card> Cards()
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 40).Select(index => new Card
-            {
-                Title = Summaries[rng.Next(Summaries.Length)]
-            });
+            return cards;
         }
 
         public class WeatherForecast
@@ -53,6 +55,7 @@ namespace BabyGame.Controllers
         public class Card
         {
             public string Title { get; set; }
+            public string ImageUrl { get; set; }
         }
     }
 }
