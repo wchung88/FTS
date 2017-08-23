@@ -4,7 +4,12 @@ import { connect } from 'react-redux';
 import { ApplicationState } from '../store';
 import * as FindCards from '../store/FindCards';
 
-type CardProps = FindCards.Card;
+interface ICardActionsProps {
+    cardClicked: (card: FindCards.Card) => void;
+}
+
+type CardProps = FindCards.Card
+    & ICardActionsProps;
 
 export class Card extends React.Component<CardProps, {}> {
     public render() {
@@ -12,7 +17,10 @@ export class Card extends React.Component<CardProps, {}> {
             <div className="card-body">
                 <h1 className="card-title">{this.props.title}</h1>
                 <img className="card-image" src={this.props.imageUrl} />
+                
             </div>
         </div>;
     }
 }
+
+// onClick={this.props.cardClicked(this.props)}

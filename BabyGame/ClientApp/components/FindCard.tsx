@@ -17,7 +17,7 @@ class FindCard extends React.Component<FindCardProps, {}> {
     }
 
     public render() {
-        if (!this.props.spoken) {
+        if (this.props.cards.length > 0) {
             window.speechSynthesis.speak(new SpeechSynthesisUtterance("Hello World"));
         }
 
@@ -32,7 +32,7 @@ class FindCard extends React.Component<FindCardProps, {}> {
         return <div className='container'>
             <div className='card-columns'>
                 {this.props.cards.map(card =>
-                    <Card imageUrl={card.imageUrl} title={card.title} />
+                    <Card imageUrl={card.imageUrl} title={card.title} cardClicked={this.props.cardClick} />
                 )}
             </div>
         </div>;

@@ -44,6 +44,9 @@ export const actionCreators = {
 
         addTask(fetchTask); // Ensure server-side prerendering waits for this to complete
         dispatch({ type: 'REQUEST_CARDS' });
+    },
+    cardClick: (card: Card) => {
+        console.log('card clicked was ' + card.title);
     }
 };
 
