@@ -1,9 +1,9 @@
 import * as WeatherForecasts from './WeatherForecasts';
-import * as FindItem from './FindItem';
+import * as FindCards from './FindCards';
 
 // The top-level state object
 export interface ApplicationState {
-    counter: FindItem.FindItemState;
+    findCards: FindCards.FindCardsState;
     weatherForecasts: WeatherForecasts.WeatherForecastsState;
 }
 
@@ -11,7 +11,7 @@ export interface ApplicationState {
 // the reducer with the matching name. It's important that the names match exactly, and that the reducer
 // acts on the corresponding ApplicationState property type.
 export const reducers = {
-    counter: FindItem.reducer,
+    findCards: FindCards.reducer,
     weatherForecasts: WeatherForecasts.reducer
 };
 

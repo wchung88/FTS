@@ -3,10 +3,10 @@ import { Route } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import Home from './components/Home';
 import FetchData from './components/FetchData';
-import FindItem from './components/FindItem';
+import FindCard from './components/FindCard';
 
 export const routes = <Layout>
     <Route exact path='/' component={ Home } />
-    <Route path='/findItem' component={ FindItem } />
+    <Route path='/findCard' component={ FindCard } />
     <Route path='/fetchdata/:startDateIndex?' component={ FetchData } />
 </Layout>;
