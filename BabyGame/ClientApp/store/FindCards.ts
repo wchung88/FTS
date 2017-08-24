@@ -8,6 +8,9 @@ import { AppThunkAction } from './';
 export interface FindCardsState {
     spoken: boolean;
     cards: Card[];
+    desiredCard: Card;
+    selectedCard: Card;
+    answered: boolean;
 }
 
 export interface Card {
@@ -22,11 +25,12 @@ export interface Card {
 
 interface ReceiveCardsAction { type: 'RECEIVE_CARDS', cards: Card[] }
 interface RequestCardsAction { type: 'REQUEST_CARDS' }
-
+interface SelectCardAction { type: 'SELECTED_CARD', selectedCard: Card }
+interface ClearCardsAction { type: 'CLEAR_CARD' }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = RequestCardsAction | ReceiveCardsAction;
+type KnownAction = RequestCardsAction | ReceiveCardsAction | SelectCardAction | ClearCardsAction;
 
 
 // ----------------
@@ -45,8 +49,11 @@ export const actionCreators = {
         addTask(fetchTask); // Ensure server-side prerendering waits for this to complete
         dispatch({ type: 'REQUEST_CARDS' });
     },
-    cardClick: (card: Card) => {
-        console.log('card clicked was ' + card.title);
+    cardClick: (card: Card): AppThunkAction<KnownAction > => (dispatch, getState) => {
+        dispatch({ type: 'SELECTED_CARD', selectedCard: card });
+    },
+    clearCards: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
+        dispatch({ type: 'CLEAR_CARD' });
     }
 };
 
@@ -58,13 +65,29 @@ export const reducer: Reducer<FindCardsState> = (state: FindCardsState, action: 
         case 'RECEIVE_CARDS':
             return {
                 cards: action.cards,
-                spoken: true
+                spoken: true,
+                desiredCard: action.cards[Math.floor(Math.random() * action.cards.length)],
+                selectedCard: state.selectedCard,
+                answered: false
             };
         case 'REQUEST_CARDS':
             return {
                 cards: state.cards,
-                spoken: false
+                desiredCard: state.desiredCard,
+                selectedCard: state.selectedCard,
+                spoken: false,
+                answered: false
             };
+        case 'SELECTED_CARD':
+            return {
+                cards: state.cards,
+                desiredCard: state.desiredCard,
+                selectedCard: action.selectedCard,
+                spoken: false,
+                answered: true
+            };
+        case 'CLEAR_CARD':
+            return { cards: [], spoken: false, desiredCard: state.desiredCard, selectedCard: state.selectedCard, answered: false };
         default:
             // The following line guarantees that every action in the KnownAction union has been covered by a case above
             const exhaustiveCheck: never = action;
@@ -72,5 +95,5 @@ export const reducer: Reducer<FindCardsState> = (state: FindCardsState, action: 
 
     // For unrecognized actions (or in cases where actions have no effect), must return the existing state
     //  (or default initial state if none was supplied)
-    return state || { cards: [], spoken: false };
+    return state || { cards: [], spoken: false, desiredCard: null, selectedCard: null, answered: false };
 };

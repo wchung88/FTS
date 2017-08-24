@@ -16,8 +16,10 @@ namespace BabyGame.Controllers
         private static Card[] cards = new[]
         {
             new Card{ Title = "Ball", ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/e/ec/Soccer_ball.svg"},
-            new Card{ Title = "Car", ImageUrl = "http://trottingmaregarage.co.uk/wp-content/uploads/2017/08/Car.png"}
-        };
+            new Card{ Title = "Car", ImageUrl = "http://trottingmaregarage.co.uk/wp-content/uploads/2017/08/Car.png"},
+            new Card{ Title = "Shoe", ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHyjSQqNveV1ywzszD9J4pmODmn_hmuP4KqJWuZ_OtpoDKKKRS"},
+            new Card{ Title = "Tree", ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFePMTXAcB-SsAUs9e73zV_dgB_c12Prh0I7xI7Aef1rlaF_nL8g"}
+    };
 
         [HttpGet("[action]")]
         public IEnumerable<WeatherForecast> WeatherForecasts(int startDateIndex)

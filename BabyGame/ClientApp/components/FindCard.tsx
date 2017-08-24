@@ -16,15 +16,35 @@ class FindCard extends React.Component<FindCardProps, {}> {
         this.props.requestCards();
     }
 
+    componentWillUnmount() {
+        this.props.clearCards();
+    }
+
     public render() {
-        if (this.props.cards.length > 0) {
-            window.speechSynthesis.speak(new SpeechSynthesisUtterance("Hello World"));
+        var itemToFind = '';
+
+        if (this.props.desiredCard && this.props.spoken) {
+            itemToFind = "Where's the " + this.props.desiredCard.title;
+            window.speechSynthesis.speak(new SpeechSynthesisUtterance(itemToFind));
+        }
+
+        if (this.props.answered === true && this.props.desiredCard && this.props.selectedCard) {
+            if (this.props.desiredCard.title === this.props.selectedCard.title) {
+                window.speechSynthesis.speak(new SpeechSynthesisUtterance('Yes'));
+                this.props.requestCards();
+                return <div />;
+            }
+            else {
+                itemToFind = "Where's the " + this.props.desiredCard.title;
+                window.speechSynthesis.speak(new SpeechSynthesisUtterance('No'));
+                window.speechSynthesis.speak(new SpeechSynthesisUtterance(itemToFind));
+            }
         }
 
         return <div>
             <h1>Find Card</h1>
-            <p>This is a simple example of a React component.</p>
-            { this.renderCards() }
+            <p>{itemToFind}</p>
+            {this.renderCards()}
         </div>;
     }
 

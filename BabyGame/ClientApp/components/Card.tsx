@@ -16,11 +16,8 @@ export class Card extends React.Component<CardProps, {}> {
         return <div className="card">
             <div className="card-body">
                 <h1 className="card-title">{this.props.title}</h1>
-                <img className="card-image" src={this.props.imageUrl} />
-                
+                <img className="card-image" src={this.props.imageUrl} onClick={() => { this.props.cardClicked(this.props); return; }} />
             </div>
         </div>;
     }
 }
-
-// onClick={this.props.cardClicked(this.props)}
