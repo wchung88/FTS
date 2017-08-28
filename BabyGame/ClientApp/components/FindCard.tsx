@@ -42,18 +42,13 @@ class FindCard extends React.Component<FindCardProps, {}> {
         }
 
         return <div>
-            <h1>Find Card</h1>
-            <p>{itemToFind}</p>
-            {this.renderCards()}
-        </div>;
-    }
-
-    private renderCards() {
-        return <div className='container'>
-            <div className='card-columns'>
-                {this.props.cards.map(card =>
-                    <Card imageUrl={card.imageUrl} title={card.title} cardClicked={this.props.cardClick} />
-                )}
+            <div className='container'>
+                <p>{itemToFind}</p>
+                <div className='card-columns'>
+                    {this.props.cards.map(card =>
+                        <Card imageUrl={card.imageUrl} title={card.title} cardClicked={this.props.cardClick} />
+                    )}
+                </div>
             </div>
         </div>;
     }
