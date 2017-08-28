@@ -10,10 +10,10 @@ type FindCardProps =
     & typeof FindCards.actionCreators
     & RouteComponentProps<{}>;
 
-class FindCard extends React.Component<FindCardProps, {}> {
+class FindLetter extends React.Component<FindCardProps, {}> {
     componentWillMount() {
         // This method runs when the component is first added to the page
-        this.props.requestCards("General");
+        this.props.requestCards("Letter");
     }
 
     componentWillUnmount() {
@@ -31,7 +31,7 @@ class FindCard extends React.Component<FindCardProps, {}> {
         if (this.props.answered === true && this.props.desiredCard && this.props.selectedCard) {
             if (this.props.desiredCard.title === this.props.selectedCard.title) {
                 window.speechSynthesis.speak(new SpeechSynthesisUtterance('Yes'));
-                this.props.requestCards("General");
+                this.props.requestCards("Letter");
                 return <div />;
             }
             else {
@@ -58,4 +58,4 @@ class FindCard extends React.Component<FindCardProps, {}> {
 export default connect(
     (state: ApplicationState) => state.findCards, // Selects which state properties are merged into the component's props
     FindCards.actionCreators                 // Selects which action creators are merged into the component's props
-)(FindCard) as typeof FindCard;
+)(FindLetter) as typeof FindLetter;

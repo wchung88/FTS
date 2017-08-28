@@ -38,9 +38,9 @@ type KnownAction = RequestCardsAction | ReceiveCardsAction | SelectCardAction | 
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const actionCreators = {
-    requestCards: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
+    requestCards: (category: String): AppThunkAction<KnownAction> => (dispatch, getState) => {
         // Only load data if it's something we don't already have (and are not already loading)
-        let fetchTask = fetch(`api/SampleData/Cards`)
+        let fetchTask = fetch(`api/SampleData/Cards/${category}`)
             .then(response => response.json() as Promise<Card[]>)
             .then(data => {
                 dispatch({ type: 'RECEIVE_CARDS', cards: data });
