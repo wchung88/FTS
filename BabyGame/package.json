@@ -19,6 +19,7 @@
     "awesome-typescript-loader": "3.2.1",
     "bootstrap": "3.3.7",
     "css-loader": "0.28.4",
+    "debounce": "^1.0.2",
     "domain-task": "^3.0.3",
     "event-source-polyfill": "0.0.9",
     "extract-text-webpack-plugin": "2.1.2",
