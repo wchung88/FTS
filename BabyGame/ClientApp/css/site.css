@@ -81,6 +81,7 @@
     height: 15rem;
     cursor: pointer;
     border: 5px solid black;
+    padding: 5px;
 }
 
 @media (min-width: 168px) {
