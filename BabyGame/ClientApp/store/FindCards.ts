@@ -50,11 +50,8 @@ export const actionCreators = {
         addTask(fetchTask); // Ensure server-side prerendering waits for this to complete
         dispatch({ type: 'REQUEST_CARDS' });
     },
-    cardClick: (card: Card): AppThunkAction<KnownAction > => (dispatch, getState) => {
-        debounce(function () {
-            console.log('doing action');
-            dispatch({ type: 'SELECTED_CARD', selectedCard: card });
-        }, 2000)();
+    cardClick: (card: Card): AppThunkAction<KnownAction> => (dispatch, getState) => {
+        dispatch({ type: 'SELECTED_CARD', selectedCard: card });
     },
     clearCards: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
         dispatch({ type: 'CLEAR_CARD' });

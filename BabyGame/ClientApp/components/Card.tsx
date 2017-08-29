@@ -17,14 +17,7 @@ export class Card extends React.Component<CardProps, {}> {
         return <div className="card">
             <div className="card-body">
                 <h1 className="card-title">{this.props.title}</h1>
-                <img className="card-image" src={this.props.imageUrl} onClick={() => {
-                    var self = this;
-                    debounce(function () {
-                        console.log('doing component action');
-                        self.props.cardClicked(self.props);
-                    }, 2000)();
-                    return;
-                }} />
+                <img className="card-image" src={this.props.imageUrl} onClick={debounce(() => {this.props.cardClicked(this.props);}, 500)} />
             </div>
         </div>;
     }
