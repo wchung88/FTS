@@ -13,17 +13,17 @@ export class NavMenu extends React.Component<{}, {}> {
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to={ '/findCard' } activeClassName='active'>
+                            <NavLink to={ '/findCard/General' } activeClassName='active'>
                                 <span className='glyphicon glyphicon-education'></span> Find Card Game
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to={'/findNumber'} activeClassName='active'>
+                            <NavLink to={'/findCard/Numeric'} activeClassName='active'>
                                 <span className='glyphicon glyphicon-education'></span> Find Number Game
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to={'/findLetter'} activeClassName='active'>
+                            <NavLink to={'/findCard/Letter'} activeClassName='active'>
                                 <span className='glyphicon glyphicon-education'></span> Find Letter Game
                             </NavLink>
                         </li>

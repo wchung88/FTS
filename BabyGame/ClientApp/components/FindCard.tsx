@@ -8,22 +8,24 @@ import { Card } from './Card';
 type FindCardProps =
     FindCards.FindCardsState
     & typeof FindCards.actionCreators
-    & RouteComponentProps<{}>;
+    & RouteComponentProps<{ category: string }>;
 
 class FindCard extends React.Component<FindCardProps, {}> {
     componentWillMount() {
         // This method runs when the component is first added to the page
-        this.props.requestCards("General");
+        this.props.requestCards(this.props.match.params.category);
     }
 
-    componentWillUnmount() {
-        this.props.clearCards();
+    componentWillReceiveProps(nextProps: FindCardProps) {
+        if (this.props.match.params.category !== nextProps.match.params.category) {
+            this.props.requestCards(nextProps.match.params.category);
+        }
     }
 
     public render() {
         var itemToFind = '';
 
-        if (this.props.desiredCard && this.props.spoken) {
+        if (this.props.desiredCard && this.props.needToSpeak === true && this.props.currentCategory === this.props.match.params.category) {
             itemToFind = "Where's the " + this.props.desiredCard.title;
             window.speechSynthesis.speak(new SpeechSynthesisUtterance(itemToFind));
         }
@@ -31,13 +33,14 @@ class FindCard extends React.Component<FindCardProps, {}> {
         if (this.props.answered === true && this.props.desiredCard && this.props.selectedCard) {
             if (this.props.desiredCard.title === this.props.selectedCard.title) {
                 window.speechSynthesis.speak(new SpeechSynthesisUtterance('Yes'));
-                this.props.requestCards("General");
+                this.props.requestCards(this.props.match.params.category);
                 return <div />;
             }
             else {
                 itemToFind = "Where's the " + this.props.desiredCard.title;
                 window.speechSynthesis.speak(new SpeechSynthesisUtterance('No'));
                 window.speechSynthesis.speak(new SpeechSynthesisUtterance(itemToFind));
+                this.props.clearCards();
             }
         }
 
