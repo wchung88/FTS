@@ -82,3 +82,32 @@
     cursor: pointer;
     border: 5px solid black;
 }
+
+@media (min-width: 168px) {
+    .navbar-collapse.collapse {
+        display: block!important;
+        height: auto!important;
+        padding-bottom: 0;
+        overflow:visible!important;
+    }
+
+    .navbar-collapse {
+        width: auto;
+        border-top: 0;
+        box-shadow: none;
+    }
+
+    .navbar-nav > li {
+        float: left;
+    } 
+    
+    .navbar-nav > li > a {
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+    .navbar-nav {
+        float: left;
+        margin: 0;
+    }
+}
