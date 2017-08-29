@@ -13,6 +13,7 @@ export interface FindCardsState {
     selectedCard: Card;
     answered: boolean;
     currentCategory: String;
+    voiceIndex: number;
 }
 
 export interface Card {
@@ -29,10 +30,12 @@ interface ReceiveCardsAction { type: 'RECEIVE_CARDS', cards: Card[], currentCate
 interface RequestCardsAction { type: 'REQUEST_CARDS' }
 interface SelectCardAction { type: 'SELECTED_CARD', selectedCard: Card }
 interface ClearCardsAction { type: 'CLEAR_CARD' }
+interface ChangeVoiceAction { type: 'CHANGE_VOICE', selectedIndex: number }
+
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = RequestCardsAction | ReceiveCardsAction | SelectCardAction | ClearCardsAction;
+type KnownAction = RequestCardsAction | ReceiveCardsAction | SelectCardAction | ClearCardsAction | ChangeVoiceAction;
 
 
 // ----------------
@@ -56,6 +59,9 @@ export const actionCreators = {
     },
     clearCards: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
         dispatch({ type: 'CLEAR_CARD' });
+    },
+    changeVoice: (selectedIndex: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
+        dispatch({ type: 'CHANGE_VOICE', selectedIndex: selectedIndex });
     }
 };
 
@@ -71,7 +77,8 @@ export const reducer: Reducer<FindCardsState> = (state: FindCardsState, action: 
                 desiredCard: action.cards[Math.floor(Math.random() * action.cards.length)],
                 selectedCard: state.selectedCard,
                 answered: state.answered,
-                currentCategory: action.currentCategory
+                currentCategory: action.currentCategory,
+                voiceIndex: state.voiceIndex
             };
         case 'REQUEST_CARDS':
             return {
@@ -80,7 +87,8 @@ export const reducer: Reducer<FindCardsState> = (state: FindCardsState, action: 
                 selectedCard: state.selectedCard,
                 needToSpeak: false,
                 answered: false,
-                currentCategory: state.currentCategory
+                currentCategory: state.currentCategory,
+                voiceIndex: state.voiceIndex
             };
         case 'SELECTED_CARD':
             return {
@@ -89,10 +97,29 @@ export const reducer: Reducer<FindCardsState> = (state: FindCardsState, action: 
                 selectedCard: action.selectedCard,
                 needToSpeak: false,
                 answered: true,
-                currentCategory: state.currentCategory
+                currentCategory: state.currentCategory,
+                voiceIndex: state.voiceIndex
             };
         case 'CLEAR_CARD':
-            return { cards: [], needToSpeak: false, desiredCard: state.desiredCard, selectedCard: state.selectedCard, answered: false, currentCategory: state.currentCategory };
+            return {
+                cards: [],
+                needToSpeak: false,
+                desiredCard: state.desiredCard,
+                selectedCard: state.selectedCard,
+                answered: false,
+                currentCategory: state.currentCategory,
+                voiceIndex: state.voiceIndex
+            };
+        case 'CHANGE_VOICE':
+            return {
+                cards: state.cards,
+                needToSpeak: state.needToSpeak,
+                desiredCard: state.desiredCard,
+                selectedCard: state.selectedCard,
+                answered: state.answered,
+                currentCategory: state.currentCategory,
+                voiceIndex: action.selectedIndex
+            }
         default:
             // The following line guarantees that every action in the KnownAction union has been covered by a case above
             const exhaustiveCheck: never = action;
@@ -100,5 +127,5 @@ export const reducer: Reducer<FindCardsState> = (state: FindCardsState, action: 
 
     // For unrecognized actions (or in cases where actions have no effect), must return the existing state
     //  (or default initial state if none was supplied)
-    return state || { cards: [], needToSpeak: false, desiredCard: null, selectedCard: null, answered: true, currentCategory: "" };
+    return state || { cards: [], needToSpeak: false, desiredCard: null, selectedCard: null, answered: true, currentCategory: "", voiceIndex: 0 };
 };

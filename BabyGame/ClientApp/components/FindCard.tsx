@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { ApplicationState }  from '../store';
 import * as FindCards from '../store/FindCards';
 import { Card } from './Card';
+import { VoiceSelector } from './VoiceSelector'
 
 type FindCardProps =
     FindCards.FindCardsState
@@ -24,28 +25,33 @@ class FindCard extends React.Component<FindCardProps, {}> {
 
     public render() {
         var itemToFind = '';
-
+        var speechSynthesis = new SpeechSynthesisUtterance();
+        speechSynthesis.voice = window.speechSynthesis.getVoices()[this.props.voiceIndex];
         if (this.props.desiredCard && this.props.needToSpeak === true && this.props.currentCategory === this.props.match.params.category) {
             itemToFind = "Where's the " + this.props.desiredCard.title;
-            window.speechSynthesis.speak(new SpeechSynthesisUtterance(itemToFind));
+            speechSynthesis.text = itemToFind;
+            window.speechSynthesis.speak(speechSynthesis);
         }
 
         if (this.props.answered === true && this.props.desiredCard && this.props.selectedCard) {
             if (this.props.desiredCard.title === this.props.selectedCard.title) {
-                window.speechSynthesis.speak(new SpeechSynthesisUtterance('Yes'));
+                speechSynthesis.text = "Yes";
+                window.speechSynthesis.speak(speechSynthesis);
                 this.props.requestCards(this.props.match.params.category);
                 return <div />;
             }
             else {
-                itemToFind = "Where's the " + this.props.desiredCard.title;
-                window.speechSynthesis.speak(new SpeechSynthesisUtterance('No'));
-                window.speechSynthesis.speak(new SpeechSynthesisUtterance(itemToFind));
+                itemToFind = "No, Where's the " + this.props.desiredCard.title;
+                speechSynthesis.text = itemToFind;
+                window.speechSynthesis.speak(speechSynthesis);
             }
         }
 
         return <div>
             <div className='container'>
                 <p>{itemToFind}</p>
+                <VoiceSelector changeVoice={this.props.changeVoice} selectedIndex={this.props.voiceIndex} />
+                <br />
                 <div className='card-columns'>
                     {this.props.cards.map(card =>
                         <Card imageUrl={card.imageUrl} title={card.title} cardClicked={this.props.cardClick} />
