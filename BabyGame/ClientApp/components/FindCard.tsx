@@ -40,7 +40,6 @@ class FindCard extends React.Component<FindCardProps, {}> {
                 itemToFind = "Where's the " + this.props.desiredCard.title;
                 window.speechSynthesis.speak(new SpeechSynthesisUtterance('No'));
                 window.speechSynthesis.speak(new SpeechSynthesisUtterance(itemToFind));
-                this.props.clearCards();
             }
         }
 
