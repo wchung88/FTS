@@ -1,6 +1,7 @@
 import { fetch, addTask } from 'domain-task';
 import { Reducer, Action } from 'redux';
 import { AppThunkAction } from './';
+import debounce from 'debounce';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
@@ -50,7 +51,10 @@ export const actionCreators = {
         dispatch({ type: 'REQUEST_CARDS' });
     },
     cardClick: (card: Card): AppThunkAction<KnownAction > => (dispatch, getState) => {
-        dispatch({ type: 'SELECTED_CARD', selectedCard: card });
+        debounce(function () {
+            console.log('doing action');
+            dispatch({ type: 'SELECTED_CARD', selectedCard: card });
+        }, 2000)();
     },
     clearCards: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
         dispatch({ type: 'CLEAR_CARD' });

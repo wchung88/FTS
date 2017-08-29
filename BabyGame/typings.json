@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "debounce": "registry:dt/debounce#0.0.0+20160428043022"
+  }
+}
