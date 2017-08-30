@@ -4,3 +4,6 @@ C:\Dev\Git\FTS\Database\obj\Debug\netcoreapp2.0\Database.csprojResolveAssemblyRe
 C:\Dev\Git\FTS\Database\obj\Debug\netcoreapp2.0\Database.csproj.CoreCompileInputs.cache
 C:\Dev\Git\FTS\Database\obj\Debug\netcoreapp2.0\Database.AssemblyInfoInputs.cache
 C:\Dev\Git\FTS\Database\obj\Debug\netcoreapp2.0\Database.AssemblyInfo.cs
+C:\Dev\Git\FTS\Database\bin\Debug\netcoreapp2.0\Database.pdb
+C:\Dev\Git\FTS\Database\obj\Debug\netcoreapp2.0\Database.dll
+C:\Dev\Git\FTS\Database\obj\Debug\netcoreapp2.0\Database.pdb

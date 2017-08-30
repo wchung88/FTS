@@ -26,7 +26,7 @@ class FindCard extends React.Component<FindCardProps, {}> {
     public render() {
         var itemToFind = '';
         var speechSynthesis = new SpeechSynthesisUtterance();
-        speechSynthesis.voice = window.speechSynthesis.getVoices()[this.props.voiceIndex];
+        // speechSynthesis.voice = window.speechSynthesis.getVoices()[this.props.voiceIndex];
         if (this.props.desiredCard && this.props.needToSpeak === true && this.props.currentCategory === this.props.match.params.category) {
             itemToFind = "Where's the " + this.props.desiredCard.title;
             speechSynthesis.text = itemToFind;
@@ -50,7 +50,7 @@ class FindCard extends React.Component<FindCardProps, {}> {
         return <div>
             <div className='container'>
                 <p>{itemToFind}</p>
-                <VoiceSelector changeVoice={this.props.changeVoice} selectedIndex={this.props.voiceIndex} />
+                
                 <br />
                 <div className='card-columns'>
                     {this.props.cards.map(card =>
@@ -59,6 +59,7 @@ class FindCard extends React.Component<FindCardProps, {}> {
                 </div>
             </div>
         </div>;
+        // <VoiceSelector changeVoice={this.props.changeVoice} selectedIndex={this.props.voiceIndex} />
     }
 }
 
