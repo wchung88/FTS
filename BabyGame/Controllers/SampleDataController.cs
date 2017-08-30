@@ -1,12 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc;
-using Database.Repository;
-using Database.Models;
-
 namespace BabyGame.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using Microsoft.AspNetCore.Mvc;
+    using Database.Repository;
+    using Database.Models;
+
     [Route("api/[controller]")]
     public class SampleDataController : Controller
     {
@@ -24,6 +23,13 @@ namespace BabyGame.Controllers
             return GetCards(cards, level);
         }
 
+        [HttpGet("[action]/{previousCardId}")]
+        public Card LearningCards(int previousCardId)
+        {
+            var cards = this.cardRepository.GetCards();
+            return GetLearningCard(cards, previousCardId);
+        }
+
         private IEnumerable<Card> GetCards(IList<Card> CardsToQuery, int level)
         {
             var rng = new Random();
@@ -39,6 +45,18 @@ namespace BabyGame.Controllers
             }
 
             return cardsToReturn;
+        }
+
+        private Card GetLearningCard(IList<Card> CardsToQuery, int previousCardId)
+        {
+            var rng = new Random();
+            while (true)
+            {
+                int index = rng.Next(CardsToQuery.Count);
+                var card = CardsToQuery[index];
+                if (card.CardId != previousCardId)
+                    return card;
+            }
         }
     }
 }

@@ -21,6 +21,7 @@ export interface FindCardsState {
 export interface Card {
     title: string;
     imageUrl: string;
+    cardId: number;
 }
 
 // -----------------

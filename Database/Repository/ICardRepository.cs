@@ -6,5 +6,6 @@
     public interface ICardRepository
     {
         IList<Card> GetCards(string category, int level);
+        IList<Card> GetCards();
     }
 }

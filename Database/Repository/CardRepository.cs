@@ -17,5 +17,10 @@
         {
             return _dbContext.Cards.Where(x => x.Category == category && x.Level == level).ToList();
         }
+
+        public IList<Card> GetCards()
+        {
+            return _dbContext.Cards.ToList();
+        }
     }
 }
