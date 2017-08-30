@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { ApplicationState }  from '../store';
 import * as FindCards from '../store/FindCards';
 import { Card } from './Card';
-import { VoiceSelector } from './VoiceSelector'
+import { LevelSelector } from './LevelSelector'
 
 type FindCardProps =
     FindCards.FindCardsState
@@ -14,12 +14,12 @@ type FindCardProps =
 class FindCard extends React.Component<FindCardProps, {}> {
     componentWillMount() {
         // This method runs when the component is first added to the page
-        this.props.requestCards(this.props.match.params.category);
+        this.props.requestCards(this.props.match.params.category, this.props.level);
     }
 
     componentWillReceiveProps(nextProps: FindCardProps) {
-        if (this.props.match.params.category !== nextProps.match.params.category) {
-            this.props.requestCards(nextProps.match.params.category);
+        if (this.props.match.params.category !== nextProps.match.params.category || nextProps.hasLevelChanged === true) {
+            this.props.requestCards(nextProps.match.params.category, nextProps.level);
         }
     }
 
@@ -27,7 +27,7 @@ class FindCard extends React.Component<FindCardProps, {}> {
         var itemToFind = '';
         var speechSynthesis = new SpeechSynthesisUtterance();
         // speechSynthesis.voice = window.speechSynthesis.getVoices()[this.props.voiceIndex];
-        if (this.props.desiredCard && this.props.needToSpeak === true && this.props.currentCategory === this.props.match.params.category) {
+        if (this.ShouldAskInitialQuestion()) {
             itemToFind = "Where's the " + this.props.desiredCard.title;
             speechSynthesis.text = itemToFind;
             window.speechSynthesis.speak(speechSynthesis);
@@ -37,7 +37,7 @@ class FindCard extends React.Component<FindCardProps, {}> {
             if (this.props.desiredCard.title === this.props.selectedCard.title) {
                 speechSynthesis.text = "Yes";
                 window.speechSynthesis.speak(speechSynthesis);
-                this.props.requestCards(this.props.match.params.category);
+                this.props.requestCards(this.props.match.params.category, this.props.level);
                 return <div />;
             }
             else {
@@ -50,7 +50,7 @@ class FindCard extends React.Component<FindCardProps, {}> {
         return <div>
             <div className='container'>
                 <p>{itemToFind}</p>
-                
+                <LevelSelector changeLevel={this.props.changeLevel} selectedLevel={this.props.level} />
                 <br />
                 <div className='card-columns'>
                     {this.props.cards.map(card =>
@@ -60,6 +60,13 @@ class FindCard extends React.Component<FindCardProps, {}> {
             </div>
         </div>;
         // <VoiceSelector changeVoice={this.props.changeVoice} selectedIndex={this.props.voiceIndex} />
+    }
+
+    private ShouldAskInitialQuestion(): boolean {
+        return this.props.desiredCard &&
+            this.props.needToSpeak === true &&
+            this.props.currentCategory === this.props.match.params.category &&
+            this.props.hasLevelChanged === false;
     }
 }
 

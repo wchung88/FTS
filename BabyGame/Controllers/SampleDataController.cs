@@ -29,7 +29,7 @@ namespace BabyGame.Controllers
             var rng = new Random();
             IList<Card> cardsToReturn = new List<Card>();
 
-            while (cardsToReturn.Count < 8)
+            while (cardsToReturn.Count < 8 && cardsToReturn.Count != CardsToQuery.Count)
             {
                 int index = rng.Next(CardsToQuery.Count);
                 var card = CardsToQuery[index];

@@ -60,7 +60,7 @@ namespace BabyGame
             {
                 var context = serviceScope.ServiceProvider.GetService<CardGameContext>();
                 context.Database.Migrate();
-                // context.EnsureSeedData();
+                context.EnsureSeedData();
             }
         }
     }

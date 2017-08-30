@@ -14,6 +14,8 @@ export interface FindCardsState {
     answered: boolean;
     currentCategory: String;
     voiceIndex: number;
+    level: number;
+    hasLevelChanged: boolean;
 }
 
 export interface Card {
@@ -31,11 +33,11 @@ interface RequestCardsAction { type: 'REQUEST_CARDS' }
 interface SelectCardAction { type: 'SELECTED_CARD', selectedCard: Card }
 interface ClearCardsAction { type: 'CLEAR_CARD' }
 interface ChangeVoiceAction { type: 'CHANGE_VOICE', selectedIndex: number }
-
+interface ChangeLevelAction { type: 'CHANGE_LEVEL', level: number }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = RequestCardsAction | ReceiveCardsAction | SelectCardAction | ClearCardsAction | ChangeVoiceAction;
+type KnownAction = RequestCardsAction | ReceiveCardsAction | SelectCardAction | ClearCardsAction | ChangeVoiceAction | ChangeLevelAction;
 
 
 // ----------------
@@ -43,9 +45,9 @@ type KnownAction = RequestCardsAction | ReceiveCardsAction | SelectCardAction | 
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const actionCreators = {
-    requestCards: (category: String): AppThunkAction<KnownAction> => (dispatch, getState) => {
+    requestCards: (category: String, level: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
         // Only load data if it's something we don't already have (and are not already loading)
-        let fetchTask = fetch(`api/SampleData/Cards/${category}/1`)
+        let fetchTask = fetch(`api/SampleData/Cards/${category}/${level}`)
             .then(response => response.json() as Promise<Card[]>)
             .then(data => {
                 dispatch({ type: 'RECEIVE_CARDS', cards: data, currentCategory: category });
@@ -62,6 +64,9 @@ export const actionCreators = {
     },
     changeVoice: (selectedIndex: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
         dispatch({ type: 'CHANGE_VOICE', selectedIndex: selectedIndex });
+    },
+    changeLevel: (level: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
+        dispatch({ type: 'CHANGE_LEVEL', level: level });
     }
 };
 
@@ -78,7 +83,9 @@ export const reducer: Reducer<FindCardsState> = (state: FindCardsState, action: 
                 selectedCard: state.selectedCard,
                 answered: state.answered,
                 currentCategory: action.currentCategory,
-                voiceIndex: state.voiceIndex
+                voiceIndex: state.voiceIndex,
+                level: state.level,
+                hasLevelChanged: false
             };
         case 'REQUEST_CARDS':
             return {
@@ -88,7 +95,9 @@ export const reducer: Reducer<FindCardsState> = (state: FindCardsState, action: 
                 needToSpeak: false,
                 answered: false,
                 currentCategory: state.currentCategory,
-                voiceIndex: state.voiceIndex
+                voiceIndex: state.voiceIndex,
+                level: state.level,
+                hasLevelChanged: false
             };
         case 'SELECTED_CARD':
             return {
@@ -98,7 +107,9 @@ export const reducer: Reducer<FindCardsState> = (state: FindCardsState, action: 
                 needToSpeak: false,
                 answered: true,
                 currentCategory: state.currentCategory,
-                voiceIndex: state.voiceIndex
+                voiceIndex: state.voiceIndex,
+                level: state.level,
+                hasLevelChanged: false
             };
         case 'CLEAR_CARD':
             return {
@@ -108,7 +119,9 @@ export const reducer: Reducer<FindCardsState> = (state: FindCardsState, action: 
                 selectedCard: state.selectedCard,
                 answered: false,
                 currentCategory: state.currentCategory,
-                voiceIndex: state.voiceIndex
+                voiceIndex: state.voiceIndex,
+                level: state.level,
+                hasLevelChanged: false
             };
         case 'CHANGE_VOICE':
             return {
@@ -118,7 +131,21 @@ export const reducer: Reducer<FindCardsState> = (state: FindCardsState, action: 
                 selectedCard: state.selectedCard,
                 answered: state.answered,
                 currentCategory: state.currentCategory,
-                voiceIndex: action.selectedIndex
+                voiceIndex: action.selectedIndex,
+                level: state.level,
+                hasLevelChanged: false
+            }
+        case 'CHANGE_LEVEL':
+            return {
+                cards: state.cards,
+                needToSpeak: state.needToSpeak,
+                desiredCard: state.desiredCard,
+                selectedCard: state.selectedCard,
+                answered: state.answered,
+                currentCategory: state.currentCategory,
+                voiceIndex: state.voiceIndex,
+                level: action.level,
+                hasLevelChanged: true
             }
         default:
             // The following line guarantees that every action in the KnownAction union has been covered by a case above
@@ -127,5 +154,5 @@ export const reducer: Reducer<FindCardsState> = (state: FindCardsState, action: 
 
     // For unrecognized actions (or in cases where actions have no effect), must return the existing state
     //  (or default initial state if none was supplied)
-    return state || { cards: [], needToSpeak: false, desiredCard: null, selectedCard: null, answered: true, currentCategory: "", voiceIndex: 0 };
+    return state || { cards: [], needToSpeak: false, desiredCard: null, selectedCard: null, answered: true, currentCategory: "", voiceIndex: 0, level: 1, hasLevelChanged: false };
 };
