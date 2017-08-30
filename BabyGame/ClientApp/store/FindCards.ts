@@ -45,7 +45,7 @@ type KnownAction = RequestCardsAction | ReceiveCardsAction | SelectCardAction | 
 export const actionCreators = {
     requestCards: (category: String): AppThunkAction<KnownAction> => (dispatch, getState) => {
         // Only load data if it's something we don't already have (and are not already loading)
-        let fetchTask = fetch(`api/SampleData/Cards/${category}`)
+        let fetchTask = fetch(`api/SampleData/Cards/${category}/1`)
             .then(response => response.json() as Promise<Card[]>)
             .then(data => {
                 dispatch({ type: 'RECEIVE_CARDS', cards: data, currentCategory: category });
