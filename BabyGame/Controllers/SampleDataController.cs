@@ -21,15 +21,15 @@ namespace BabyGame.Controllers
         public IEnumerable<Card> Cards(string category, int level)
         {
             var cards = this.cardRepository.GetCards(category, level);
-            return GetCards(cards);
+            return GetCards(cards, level);
         }
 
-        private IEnumerable<Card> GetCards(IList<Card> CardsToQuery)
+        private IEnumerable<Card> GetCards(IList<Card> CardsToQuery, int level)
         {
             var rng = new Random();
             IList<Card> cardsToReturn = new List<Card>();
 
-            while (cardsToReturn.Count < 8 && cardsToReturn.Count != CardsToQuery.Count)
+            while (cardsToReturn.Count < (4 * level) && cardsToReturn.Count != CardsToQuery.Count)
             {
                 int index = rng.Next(CardsToQuery.Count);
                 var card = CardsToQuery[index];
