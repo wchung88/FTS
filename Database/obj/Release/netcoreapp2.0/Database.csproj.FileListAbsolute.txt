@@ -1,0 +1,9 @@
+C:\Dev\Git\FTS\Database\bin\Release\netcoreapp2.0\Database.deps.json
+C:\Dev\Git\FTS\Database\bin\Release\netcoreapp2.0\Database.dll
+C:\Dev\Git\FTS\Database\bin\Release\netcoreapp2.0\Database.pdb
+C:\Dev\Git\FTS\Database\obj\Release\netcoreapp2.0\Database.csprojResolveAssemblyReference.cache
+C:\Dev\Git\FTS\Database\obj\Release\netcoreapp2.0\Database.csproj.CoreCompileInputs.cache
+C:\Dev\Git\FTS\Database\obj\Release\netcoreapp2.0\Database.AssemblyInfoInputs.cache
+C:\Dev\Git\FTS\Database\obj\Release\netcoreapp2.0\Database.AssemblyInfo.cs
+C:\Dev\Git\FTS\Database\obj\Release\netcoreapp2.0\Database.dll
+C:\Dev\Git\FTS\Database\obj\Release\netcoreapp2.0\Database.pdb
