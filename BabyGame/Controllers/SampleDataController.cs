@@ -5,6 +5,7 @@ namespace BabyGame.Controllers
     using Microsoft.AspNetCore.Mvc;
     using Database.Repository;
     using Database.Models;
+    using System.Linq;
 
     [Route("api/[controller]")]
     public class SampleDataController : Controller
@@ -14,6 +15,24 @@ namespace BabyGame.Controllers
         public SampleDataController(ICardRepository cardRepository)
         {
             this.cardRepository = cardRepository;
+        }
+
+        [HttpPost("Card/{cardId}/correct")]
+        public ActionResult CorrectlyAnswered(int cardId)
+        {
+            var card = this.cardRepository.GetCard(cardId);
+            card.CorrectlyAnswered++;
+            this.cardRepository.SaveAll();
+            return NoContent();
+        }
+
+        [HttpPost("Card/{cardId}/incorrect")]
+        public ActionResult IncorrectlyAnswered(int cardId)
+        {
+            var card = this.cardRepository.GetCard(cardId);
+            card.IncorrectlyAnswered++;
+            this.cardRepository.SaveAll();
+            return NoContent();
         }
 
         [HttpGet("[action]/{category}/{level}")]
@@ -40,7 +59,17 @@ namespace BabyGame.Controllers
                 int index = rng.Next(CardsToQuery.Count);
                 var card = CardsToQuery[index];
 
-                if (!cardsToReturn.Contains(card))
+                int accurracyRatio;
+                if (card.IncorrectlyAnswered == 0)
+                {
+                    accurracyRatio = card.CorrectlyAnswered;
+                }
+                else
+                {
+                    accurracyRatio = card.CorrectlyAnswered / card.IncorrectlyAnswered;
+                }
+
+                if (accurracyRatio < 7 && !cardsToReturn.Contains(card))
                     cardsToReturn.Add(card);
             }
 
@@ -50,10 +79,14 @@ namespace BabyGame.Controllers
         private Card GetLearningCard(IList<Card> CardsToQuery, int previousCardId)
         {
             var rng = new Random();
+            var potentialCardsToLearn = CardsToQuery.Where(x => x.IncorrectlyAnswered > 0).OrderBy(x => x.CorrectlyAnswered / x.IncorrectlyAnswered).ToList();
+            var cardsToUse = potentialCardsToLearn.Count > 0 ? potentialCardsToLearn : CardsToQuery;
+
             while (true)
             {
-                int index = rng.Next(CardsToQuery.Count);
-                var card = CardsToQuery[index];
+                // Only return the bottom half of the incorrect ones
+                int index = rng.Next(cardsToUse.Count / 2);
+                var card = cardsToUse[index];
                 if (card.CardId != previousCardId)
                     return card;
             }

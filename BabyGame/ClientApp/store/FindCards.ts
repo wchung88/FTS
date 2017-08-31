@@ -58,7 +58,16 @@ export const actionCreators = {
         dispatch({ type: 'REQUEST_CARDS' });
     },
     cardClick: (card: Card): AppThunkAction<KnownAction> => (dispatch, getState) => {
-        dispatch({ type: 'SELECTED_CARD', selectedCard: card });
+        let desiredCard = getState().findCards.desiredCard;
+        let urlPath = card.cardId == desiredCard.cardId ? "correct" : "incorrect";
+        let fetchTask = fetch(`api/SampleData/Card/${desiredCard.cardId}/${urlPath}`, {
+            method: "post",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then(() => dispatch({ type: 'SELECTED_CARD', selectedCard: card }));
+        addTask(fetchTask);
     },
     clearCards: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
         dispatch({ type: 'CLEAR_CARD' });
