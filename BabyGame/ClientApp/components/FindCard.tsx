@@ -54,7 +54,7 @@ class FindCard extends React.Component<FindCardProps, {}> {
                 <br />
                 <div className='card-columns'>
                     {this.props.cards.map(card =>
-                        <Card imageUrl={card.imageUrl} title={card.title} cardClicked={this.props.cardClick} />
+                        <Card imageUrl={card.imageUrl} title={card.title} cardId={card.cardId} cardClicked={this.props.cardClick} />
                     )}
                 </div>
             </div>
