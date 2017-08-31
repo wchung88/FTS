@@ -9,7 +9,6 @@
 
         public void EnsureSeedData()
         {
-            
             SaveChanges();
         }
 
@@ -65,5 +64,7 @@
         }
 
         public DbSet<Card> Cards { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<UserRecord> UserRecords { get; set; }
     }
 }

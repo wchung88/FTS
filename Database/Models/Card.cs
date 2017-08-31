@@ -7,8 +7,6 @@
         public string ImageUrl { get; set; }
         public string Category { get; set; }
         public int Level { get; set; }
-        public int CorrectlyAnswered { get; set; }
-        public int IncorrectlyAnswered { get; set; }
 
         public override bool Equals(object obj)
         {

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { NavLink, Link } from 'react-router-dom';
+import { UserSelector } from './UserSelector'
 
 export class NavMenu extends React.Component<{}, {}> {
     public render() {

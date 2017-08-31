@@ -25,7 +25,7 @@ class LearnCard extends React.Component<LearnCardProps, {}> {
             return <div>
                 <div className='container'>
                     <div className='card-columns'>
-                        <Card imageUrl={this.props.card.imageUrl} title={this.props.card.title} cardId={this.props.card.cardId} cardClicked={this.props.requestLearningCard} />
+                        <Card imageUrl={this.props.card.imageUrl} title={this.props.card.title} cardId={this.props.card.cardId} cardClicked={this.props.requestLearningCard} selectedUserId={1} />
                     </div>
                 </div>
             </div>;
