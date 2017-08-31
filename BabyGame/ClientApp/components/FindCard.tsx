@@ -5,6 +5,7 @@ import { ApplicationState }  from '../store';
 import * as FindCards from '../store/FindCards';
 import { Card } from './Card';
 import { LevelSelector } from './LevelSelector'
+import { UserSelector } from './UserSelector'
 
 type FindCardProps =
     FindCards.FindCardsState
@@ -14,12 +15,13 @@ type FindCardProps =
 class FindCard extends React.Component<FindCardProps, {}> {
     componentWillMount() {
         // This method runs when the component is first added to the page
-        this.props.requestCards(this.props.match.params.category, this.props.level);
+        this.props.requestCards(this.props.match.params.category, this.props.level, this.props.selectedUserId);
+        this.props.requestUsers();
     }
 
     componentWillReceiveProps(nextProps: FindCardProps) {
         if (this.props.match.params.category !== nextProps.match.params.category || nextProps.hasLevelChanged === true) {
-            this.props.requestCards(nextProps.match.params.category, nextProps.level);
+            this.props.requestCards(nextProps.match.params.category, nextProps.level, nextProps.selectedUserId);
         }
     }
 
@@ -50,11 +52,12 @@ class FindCard extends React.Component<FindCardProps, {}> {
         return <div>
             <div className='container'>
                 <p>{itemToFind}</p>
+                <UserSelector changeUser={this.props.changeUser} selectedUserId={this.props.selectedUserId} users={this.props.users} />
                 <LevelSelector changeLevel={this.props.changeLevel} selectedLevel={this.props.level} />
                 <br />
                 <div className='card-columns'>
                     {this.props.cards.map(card =>
-                        <Card imageUrl={card.imageUrl} title={card.title} cardId={card.cardId} cardClicked={this.props.cardClick} />
+                        <Card imageUrl={card.imageUrl} title={card.title} cardId={card.cardId} cardClicked={this.props.cardClick} selectedUserId={this.props.selectedUserId} />
                     )}
                 </div>
             </div>

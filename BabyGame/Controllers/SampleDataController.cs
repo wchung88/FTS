@@ -17,28 +17,46 @@ namespace BabyGame.Controllers
             this.cardRepository = cardRepository;
         }
 
-        [HttpPost("Card/{cardId}/correct")]
-        public ActionResult CorrectlyAnswered(int cardId)
+        [HttpPost("Card/{cardId}/correct/{userId}")]
+        public ActionResult CorrectlyAnswered(int cardId, int userId)
         {
-            var card = this.cardRepository.GetCard(cardId);
-            card.CorrectlyAnswered++;
+            var card = this.cardRepository.GetCard(cardId, userId);
+
+            if(card == null)
+            {
+                this.cardRepository.CreateUserRecord(cardId, userId, 1, 0);
+            }
+            else
+            {
+                card.CorrectlyAnswered++;
+            }
+
             this.cardRepository.SaveAll();
             return NoContent();
         }
 
-        [HttpPost("Card/{cardId}/incorrect")]
-        public ActionResult IncorrectlyAnswered(int cardId)
+        [HttpPost("Card/{cardId}/incorrect/{userId}")]
+        public ActionResult IncorrectlyAnswered(int cardId, int userId)
         {
-            var card = this.cardRepository.GetCard(cardId);
-            card.IncorrectlyAnswered++;
+            var card = this.cardRepository.GetCard(cardId, userId);
+
+            if (card == null)
+            {
+                this.cardRepository.CreateUserRecord(cardId, userId, 0, 1);
+            }
+            else
+            {
+                card.IncorrectlyAnswered++;
+            }
+
             this.cardRepository.SaveAll();
             return NoContent();
         }
 
-        [HttpGet("[action]/{category}/{level}")]
-        public IEnumerable<Card> Cards(string category, int level)
+        [HttpGet("[action]/{category}/{level}/{userId}")]
+        public IEnumerable<Card> Cards(string category, int level, int userId)
         {
-            var cards = this.cardRepository.GetCards(category, level);
+            var cards = this.cardRepository.GetCards(category, level, userId);
             return GetCards(cards, level);
         }
 
@@ -47,6 +65,20 @@ namespace BabyGame.Controllers
         {
             var cards = this.cardRepository.GetCards();
             return GetLearningCard(cards, previousCardId);
+        }
+
+        [HttpGet("[action]")]
+        public IEnumerable<User> Users()
+        {
+            return this.cardRepository.GetUsers();
+        }
+
+        [HttpPut("[action]/Users")]
+        public ActionResult Users(string name)
+        {
+            this.cardRepository.CreateUser(name);
+            this.cardRepository.SaveAll();
+            return NoContent();
         }
 
         private IEnumerable<Card> GetCards(IList<Card> CardsToQuery, int level)
@@ -59,15 +91,15 @@ namespace BabyGame.Controllers
                 int index = rng.Next(CardsToQuery.Count);
                 var card = CardsToQuery[index];
 
-                int accurracyRatio;
-                if (card.IncorrectlyAnswered == 0)
+                int accurracyRatio = 0;
+                /*if (card.IncorrectlyAnswered == 0)
                 {
                     accurracyRatio = card.CorrectlyAnswered;
                 }
                 else
                 {
                     accurracyRatio = card.CorrectlyAnswered / card.IncorrectlyAnswered;
-                }
+                }*/
 
                 if (accurracyRatio < 7 && !cardsToReturn.Contains(card))
                     cardsToReturn.Add(card);
@@ -79,7 +111,7 @@ namespace BabyGame.Controllers
         private Card GetLearningCard(IList<Card> CardsToQuery, int previousCardId)
         {
             var rng = new Random();
-            var potentialCardsToLearn = CardsToQuery.Where(x => x.IncorrectlyAnswered > 0).OrderBy(x => x.CorrectlyAnswered / x.IncorrectlyAnswered).ToList();
+            var potentialCardsToLearn = new List<Card>(); // CardsToQuery.Where(x => x.IncorrectlyAnswered > 0).OrderBy(x => x.CorrectlyAnswered / x.IncorrectlyAnswered).ToList();
             var cardsToUse = potentialCardsToLearn.Count > 0 ? potentialCardsToLearn : CardsToQuery;
 
             while (true)
