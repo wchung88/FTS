@@ -42,7 +42,7 @@
 
         public IList<Card> GetCards(string category, int level, int userId)
         {
-            _dbContext.Cards.FromSql("select ")
+            // _dbContext.Cards.FromSql("select ")
             return _dbContext.Cards.Where(x => x.Category == category && x.Level == level).ToList();
         }
 

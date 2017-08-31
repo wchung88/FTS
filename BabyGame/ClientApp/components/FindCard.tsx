@@ -39,7 +39,7 @@ class FindCard extends React.Component<FindCardProps, {}> {
             if (this.props.desiredCard.title === this.props.selectedCard.title) {
                 speechSynthesis.text = "Yes";
                 window.speechSynthesis.speak(speechSynthesis);
-                this.props.requestCards(this.props.match.params.category, this.props.level);
+                this.props.requestCards(this.props.match.params.category, this.props.level, this.props.selectedUserId);
                 return <div />;
             }
             else {
