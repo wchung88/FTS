@@ -56,15 +56,17 @@ namespace BabyGame.Controllers
         [HttpGet("[action]/{category}/{level}/{userId}")]
         public IEnumerable<Card> Cards(string category, int level, int userId)
         {
-            var cards = this.cardRepository.GetCards(category, level, userId);
-            return GetCards(cards, level);
+            var cards = this.cardRepository.GetCards(category, level);
+            var userRecords = this.cardRepository.GetUserRecords(userId);
+            return GetCards(cards, userRecords, level);
         }
 
-        [HttpGet("[action]/{previousCardId}")]
-        public Card LearningCards(int previousCardId)
+        [HttpGet("[action]/{previousCardId}/{userId}")]
+        public Card LearningCards(int previousCardId, int userId)
         {
             var cards = this.cardRepository.GetCards();
-            return GetLearningCard(cards, previousCardId);
+            var userRecords = this.cardRepository.GetUserRecords(userId);
+            return GetLearningCard(cards, userRecords, previousCardId);
         }
 
         [HttpGet("[action]")]
@@ -81,7 +83,7 @@ namespace BabyGame.Controllers
             return NoContent();
         }
 
-        private IEnumerable<Card> GetCards(IList<Card> CardsToQuery, int level)
+        private IEnumerable<Card> GetCards(IList<Card> CardsToQuery, IList<UserRecord> userRecord, int level)
         {
             var rng = new Random();
             IList<Card> cardsToReturn = new List<Card>();
@@ -92,14 +94,20 @@ namespace BabyGame.Controllers
                 var card = CardsToQuery[index];
 
                 int accurracyRatio = 0;
-                /*if (card.IncorrectlyAnswered == 0)
+
+                var record = userRecord.FirstOrDefault(x => x.Card.CardId == card.CardId);
+
+                if (record != null)
                 {
-                    accurracyRatio = card.CorrectlyAnswered;
+                    if (record.IncorrectlyAnswered == 0)
+                    {
+                        accurracyRatio = record.CorrectlyAnswered;
+                    }
+                    else
+                    {
+                        accurracyRatio = record.CorrectlyAnswered / record.IncorrectlyAnswered;
+                    }
                 }
-                else
-                {
-                    accurracyRatio = card.CorrectlyAnswered / card.IncorrectlyAnswered;
-                }*/
 
                 if (accurracyRatio < 7 && !cardsToReturn.Contains(card))
                     cardsToReturn.Add(card);
@@ -108,11 +116,12 @@ namespace BabyGame.Controllers
             return cardsToReturn;
         }
 
-        private Card GetLearningCard(IList<Card> CardsToQuery, int previousCardId)
+        private Card GetLearningCard(IList<Card> CardsToQuery, IList<UserRecord> userRecord, int previousCardId)
         {
             var rng = new Random();
-            var potentialCardsToLearn = new List<Card>(); // CardsToQuery.Where(x => x.IncorrectlyAnswered > 0).OrderBy(x => x.CorrectlyAnswered / x.IncorrectlyAnswered).ToList();
-            var cardsToUse = potentialCardsToLearn.Count > 0 ? potentialCardsToLearn : CardsToQuery;
+
+            var potentialCardsWithBadRecord = userRecord.Where(x => x.IncorrectlyAnswered > 0).OrderBy(x => x.CorrectlyAnswered / x.IncorrectlyAnswered).ToList();
+            var cardsToUse = UnionLearningCards(potentialCardsWithBadRecord, CardsToQuery);
 
             while (true)
             {
@@ -122,6 +131,17 @@ namespace BabyGame.Controllers
                 if (card.CardId != previousCardId)
                     return card;
             }
+        }
+
+        private IList<Card> UnionLearningCards(IList<UserRecord> potentialCardsWithBadRecord, IList<Card> originalCards)
+        {
+            IList<Card> unionCards = new List<Card>();
+            foreach(var record in potentialCardsWithBadRecord)
+            {
+                unionCards.Add(record.Card);
+            }
+
+            return unionCards.Union(originalCards).ToList();
         }
     }
 }

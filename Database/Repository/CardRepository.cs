@@ -40,9 +40,8 @@
             return _dbContext.UserRecords.FirstOrDefault(x => x.Card.CardId == cardId && x.User.UserId == userId);
         }
 
-        public IList<Card> GetCards(string category, int level, int userId)
+        public IList<Card> GetCards(string category, int level)
         {
-            // _dbContext.Cards.FromSql("select ")
             return _dbContext.Cards.Where(x => x.Category == category && x.Level == level).ToList();
         }
 
@@ -67,6 +66,11 @@
             {
                 Name = name
             });
+        }
+
+        public IList<UserRecord> GetUserRecords(int userId)
+        {
+            return _dbContext.UserRecords.Include(x => x.Card).Include(x => x.User).Where(x => x.User.UserId == userId).ToList();
         }
     }
 }
