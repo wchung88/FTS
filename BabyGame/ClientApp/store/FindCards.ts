@@ -104,6 +104,15 @@ export const actionCreators = {
         dispatch({ type: 'RETRIEVE_USERS' });
     },
     changeUser: (userId: string): AppThunkAction<KnownAction> => (dispatch, getState) => {
+        let currentState = getState().findCards;
+        // Only load data if it's something we don't already have (and are not already loading)
+        let fetchTask = fetch(`api/SampleData/Cards/${currentState.currentCategory}/${currentState.level}/${userId}`)
+            .then(response => response.json() as Promise<Card[]>)
+            .then(data => {
+                dispatch({ type: 'RECEIVE_CARDS', cards: data, currentCategory: currentState.currentCategory });
+            });
+
+        addTask(fetchTask); // Ensure server-side prerendering waits for this to complete
         dispatch({ type: 'SELECT_USER', userId: +userId });
     }
 };

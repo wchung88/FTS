@@ -5,6 +5,7 @@ import { ApplicationState }  from '../store';
 import * as LearnCards from '../store/LearnCards';
 import { Card } from './Card';
 import { LevelSelector } from './LevelSelector'
+import { UserSelector } from './UserSelector'
 
 type LearnCardProps =
     LearnCards.LearnCardsState
@@ -14,7 +15,8 @@ type LearnCardProps =
 class LearnCard extends React.Component<LearnCardProps, {}> {
     componentWillMount() {
         // This method runs when the component is first added to the page
-        this.props.requestLearningCard({ cardId: 0, imageUrl: '', title: '' });
+        this.props.requestLearningCard({ cardId: 0, imageUrl: '', title: '', },this.props.selectedUserId );
+        this.props.requestUsers();
     }
 
     public render() {
@@ -24,6 +26,7 @@ class LearnCard extends React.Component<LearnCardProps, {}> {
             window.speechSynthesis.speak(speechSynthesis);
             return <div>
                 <div className='container'>
+                    <UserSelector changeUser={this.props.changeUser} selectedUserId={this.props.selectedUserId} users={this.props.users} />
                     <div className='card-columns'>
                         <Card imageUrl={this.props.card.imageUrl} title={this.props.card.title} cardId={this.props.card.cardId} cardClicked={this.props.requestLearningCard} selectedUserId={1} />
                     </div>
